@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DIGECAC - Mesa de Ayuda</title>
+<style>
+:root{--azul:#065f35;--azul2:#0d8044;--rojo:#f5c400;--bg:#f6faf6;--tx:#1e293b}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--tx)}
+header{background:var(--azul);color:#fff;padding:14px 25px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:4px solid var(--rojo)}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{background:#fff;color:var(--azul);font-weight:800;padding:6px 10px;border-radius:6px;letter-spacing:1px;border-bottom:3px solid var(--rojo)}
+.brand small{display:block;opacity:.8;font-size:11px}
+.brand b{font-size:16px}
+button{border:0;padding:10px 15px;border-radius:6px;cursor:pointer;background:var(--azul2);color:#fff;font-size:14px}
+button:hover{opacity:.85}
+input,select,textarea{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:6px;margin:6px 0 12px;font:inherit}
+.login{max-width:400px;margin:70px auto;background:#fff;padding:30px;border-radius:12px;box-shadow:0 5px 25px #0001;border-top:5px solid var(--rojo)}
+.layout{display:flex;min-height:calc(100vh - 70px)}
+nav{width:225px;background:#064e2b;padding:20px 12px;color:#fff}
+nav button{display:block;width:100%;text-align:left;margin-bottom:6px;background:transparent}
+nav button:hover,nav button.on{background:#0d8044}nav button.on{box-shadow:inset 4px 0 var(--rojo)}
+main{padding:25px;flex:1;min-width:0}
+.panel{background:#fff;padding:20px;border-radius:10px;margin-bottom:18px;box-shadow:0 2px 8px #0001}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin-bottom:18px}
+.stat{background:#fff;padding:18px;border-radius:10px;border-left:4px solid var(--azul2)}
+.stat.r{border-color:var(--rojo)}
+.stat strong{font-size:28px;display:block;margin-top:8px}
+table{width:100%;border-collapse:collapse;background:#fff}
+th,td{padding:11px;text-align:left;border-bottom:1px solid #e2e8f0;font-size:14px}
+th{background:#e8f5ec}
+.badge{padding:4px 9px;border-radius:12px;background:#dcfce7;color:#166534;font-size:12px;white-space:nowrap}
+.s0{background:#fef3c7;color:#92400e}.s1{background:#cffafe;color:#155e75}.s2{background:#dcfce7;color:#166534}.s3{background:#e2e8f0;color:#475569}
+.p3{background:#fee2e2;color:#991b1b}.p2{background:#ffedd5;color:#9a3412}
+.late{color:#b45309;font-weight:700;font-size:12px}
+.hidden{display:none!important}
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+.danger{background:#dc2626}.green{background:#16a34a}.yellow{background:var(--rojo);color:#14391f;font-weight:600}.ghost{background:transparent;border:2px solid #fff}.gray{background:#64748b}
+.filters{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.bar{display:flex;align-items:center;gap:10px;margin:6px 0}
+.bar span:first-child{width:150px;font-size:13px}
+.bar i{display:block;height:14px;background:var(--azul2);border-radius:4px;min-width:2px}
+.modal{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;padding:15px;z-index:10}
+.box{background:#fff;border-radius:12px;padding:22px;width:100%;max-width:580px;max-height:90vh;overflow:auto}
+.hist{background:#f8fafc;border-left:3px solid var(--azul2);padding:8px 10px;margin:6px 0;border-radius:4px}
+.strip{background:var(--rojo);color:#14391f;font-size:12px;font-weight:600;padding:5px 25px;letter-spacing:.3px}
+.hero{background:linear-gradient(135deg,#064e2b,#0d8044);color:#fff;padding:60px 25px;position:relative;overflow:hidden}
+.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;background:var(--rojo);opacity:.18}
+.hero:before{width:320px;height:320px;right:-80px;top:-100px}.hero:after{width:180px;height:180px;right:200px;bottom:-90px}
+.hero .in,.sec,.foot{max-width:1000px;margin:0 auto;position:relative}
+.hero h1{font-size:36px;margin:0 0 10px}.hero p{max-width:560px;font-size:17px;opacity:.95;margin:0 0 22px}
+.hero button{padding:13px 22px;font-size:15px;margin-right:8px}
+.sec{padding:34px 20px}.sec h2{color:var(--azul);border-bottom:3px solid var(--rojo);display:inline-block;padding-bottom:4px}
+.svc{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.svc div{background:#fff;border-radius:10px;padding:20px;border-top:5px solid var(--azul2);box-shadow:0 2px 8px #0001}
+.svc div:nth-child(2){border-color:var(--rojo)}.svc span{font-size:30px}.svc h3{margin:8px 0 4px;color:var(--azul)}.svc p{margin:0;font-size:14px}
+.foot{padding:18px 20px 30px;font-size:13px;color:#475569;border-top:1px solid #d1e7d8}
+@media(max-width:700px){.hero h1{font-size:26px}
+.layout{display:block}nav{width:100%;display:flex;overflow:auto;padding:8px}
+nav button{min-width:max-content;width:auto;margin:3px}
+main{padding:12px}table{font-size:12px}.filters,.grid2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="strip">GOBIERNO DE LA REPÚBLICA DOMINICANA · MESA DE AYUDA INSTITUCIONAL</div>
+<header>
+<div class="brand"><div class="logo">DIGECAC</div><div><b>Mesa de Ayuda</b><small>Dirección General de Centros de Atención Ciudadana</small></div></div>
+<div id="session"></div>
+</header>
+
+<div id="home">
+<section class="hero"><div class="in">
+<h1>Mesa de Ayuda TIC</h1>
+<p>Reporta incidentes tecnológicos y da seguimiento a tus solicitudes de soporte en la Dirección General de Centros de Atención Ciudadana.</p>
+<button class="yellow" onclick="showLogin()">Ingresar al sistema</button>
+<button class="ghost" onclick="lookupModal()">Consultar un ticket</button>
+</div></section>
+<section class="sec"><h2>¿Cómo podemos ayudarte?</h2><div class="svc">
+<div><span>🎫</span><h3>Reportar un incidente</h3><p>Crea un ticket indicando categoría, prioridad y sede para que el equipo TIC lo atienda.</p></div>
+<div><span>🔎</span><h3>Dar seguimiento</h3><p>Consulta el estado y el historial de tu solicitud con el código del ticket.</p></div>
+<div><span>⏱️</span><h3>Atención por prioridad</h3><p>Cada ticket tiene un tiempo objetivo de respuesta según su prioridad.</p></div>
+</div></section>
+<div class="foot">© DIGECAC · Mesa de Ayuda de Tecnología de la Información</div>
+</div>
+
+<div id="login" class="login hidden">
+<h2>Iniciar sesión</h2>
+<p>Sistema de tickets de soporte técnico</p>
+<label>Usuario</label>
+<input id="loginUser" autocomplete="username">
+<label>Contraseña</label>
+<input id="loginPass" type="password" autocomplete="current-password">
+<button onclick="login()" style="width:100%">Entrar al sistema</button>
+<button class="gray" onclick="goHome()" style="width:100%;margin-top:8px">Volver al inicio</button>
+<p id="error" style="color:red"></p>
+<small>Usa el usuario y la contraseña asignados a tu departamento.</small>
+</div>
+
+<div id="app" class="layout hidden">
+<nav id="nav">
+<button data-p="dashboard" onclick="page('dashboard')">📊 Panel</button>
+<button data-p="tickets" onclick="page('tickets')">🎫 Tickets</button>
+<button data-p="newticket" onclick="page('newticket')">➕ Nuevo ticket</button>
+<button data-admin data-p="history" onclick="page('history')">🗂️ Historial</button>
+<button data-staff data-p="reports" onclick="page('reports')">📈 Reportes</button>
+<button data-admin data-p="users" onclick="page('users')">👥 Usuarios</button>
+<button data-admin data-p="catalogs" onclick="page('catalogs')">⚙️ Catálogos</button>
+<button onclick="passModal(current.id)">🔑 Mi contraseña</button>
+<button onclick="logout()">🚪 Cerrar sesión</button>
+</nav>
+<main id="content"></main>
+</div>
+
+<div id="modal" class="modal hidden"><div class="box" id="box"></div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const STATUS=['Pendiente','En proceso','Resuelto','Cerrado'];
+const PRIO=['Baja','Media','Alta','Urgente'];
+const SLA={Baja:72,Media:24,Alta:8,Urgente:4}; // horas
+const ROLES={user:'Empleado',technician:'Técnico TIC',manager:'Encargado de área',admin:'Administrador'};
+const DEF={
+departments:["Antedespacho", "Gerencia Administrativa", "Gerencia Financiera", "Sub Dirección General", "Planificación", "Comunicaciones", "Libre Acceso", "Paisajismo", "Operaciones Técnicas", "Tecnología", "Nómina", "Servicios Generales", "Seguridad", "Áreas Verdes", "Contabilidad", "RR.HH", "Transportación", "Educativa", "Calidad en la Gestión", "Formulación de PPP", "Protocolo", "Almacén", "Mantenimiento de Áreas Verdes", "Compras", "Presupuesto", "Correspondencia", "Jurídica", "Unidad Médica"],
+sites:['Sede Central','Punto GOB (centro de atención)','Otra sede'],
+categories:['Computadora / Hardware','Software / Aplicaciones','Red / Internet','Correo institucional','Impresoras / Escáner','Accesos / Cuentas','Telefonía','Otro']
+};
+
+const SEED_USERS=[{"id": 1000, "name": "Antedespacho", "username": "antedespacho", "password": "Antedespacho556", "role": "manager", "department": "Antedespacho"}, {"id": 1001, "name": "Gerencia Administrativa", "username": "ger.administrativa", "password": "GerAdministrativa943", "role": "manager", "department": "Gerencia Administrativa"}, {"id": 1002, "name": "Gerencia Financiera", "username": "ger.financiera", "password": "GerFinanciera837", "role": "manager", "department": "Gerencia Financiera"}, {"id": 1003, "name": "Sub Dirección General", "username": "subdireccion", "password": "Subdireccion259", "role": "manager", "department": "Sub Dirección General"}, {"id": 1004, "name": "Planificación", "username": "planificacion", "password": "Planificacion656", "role": "manager", "department": "Planificación"}, {"id": 1005, "name": "Comunicaciones", "username": "comunicaciones", "password": "Comunicaciones103", "role": "manager", "department": "Comunicaciones"}, {"id": 1006, "name": "Libre Acceso", "username": "libre.acceso", "password": "LibreAcceso762", "role": "manager", "department": "Libre Acceso"}, {"id": 1007, "name": "Paisajismo", "username": "paisajismo", "password": "Paisajismo966", "role": "manager", "department": "Paisajismo"}, {"id": 1008, "name": "Operaciones Técnicas", "username": "operaciones", "password": "Operaciones207", "role": "manager", "department": "Operaciones Técnicas"}, {"id": 1009, "name": "Tecnología", "username": "tecnologia", "password": "Tecnologia336", "role": "admin", "department": "Tecnología"}, {"id": 1010, "name": "Nómina", "username": "nomina", "password": "Nomina380", "role": "manager", "department": "Nómina"}, {"id": 1011, "name": "Servicios Generales", "username": "serv.generales", "password": "ServGenerales538", "role": "manager", "department": "Servicios Generales"}, {"id": 1012, "name": "Seguridad", "username": "seguridad", "password": "Seguridad489", "role": "manager", "department": "Seguridad"}, {"id": 1013, "name": "Áreas Verdes", "username": "areas.verdes", "password": "AreasVerdes457", "role": "manager", "department": "Áreas Verdes"}, {"id": 1014, "name": "Contabilidad", "username": "contabilidad", "password": "Contabilidad928", "role": "manager", "department": "Contabilidad"}, {"id": 1015, "name": "RR.HH", "username": "rrhh", "password": "Rrhh680", "role": "manager", "department": "RR.HH"}, {"id": 1016, "name": "Transportación", "username": "transportacion", "password": "Transportacion627", "role": "manager", "department": "Transportación"}, {"id": 1017, "name": "Educativa", "username": "educativa", "password": "Educativa947", "role": "manager", "department": "Educativa"}, {"id": 1018, "name": "Calidad en la Gestión", "username": "calidad", "password": "Calidad966", "role": "manager", "department": "Calidad en la Gestión"}, {"id": 1019, "name": "Formulación de PPP", "username": "ppp", "password": "Ppp976", "role": "manager", "department": "Formulación de PPP"}, {"id": 1020, "name": "Protocolo", "username": "protocolo", "password": "Protocolo205", "role": "manager", "department": "Protocolo"}, {"id": 1021, "name": "Almacén", "username": "almacen", "password": "Almacen216", "role": "manager", "department": "Almacén"}, {"id": 1022, "name": "Mantenimiento de Áreas Verdes", "username": "mant.areasverdes", "password": "MantAreasverdes461", "role": "manager", "department": "Mantenimiento de Áreas Verdes"}, {"id": 1023, "name": "Compras", "username": "compras", "password": "Compras449", "role": "manager", "department": "Compras"}, {"id": 1024, "name": "Presupuesto", "username": "presupuesto", "password": "Presupuesto607", "role": "manager", "department": "Presupuesto"}, {"id": 1025, "name": "Correspondencia", "username": "correspondencia", "password": "Correspondencia810", "role": "manager", "department": "Correspondencia"}, {"id": 1026, "name": "Jurídica", "username": "juridica", "password": "Juridica518", "role": "manager", "department": "Jurídica"}, {"id": 1027, "name": "Unidad Médica", "username": "unidad.medica", "password": "UnidadMedica749", "role": "manager", "department": "Unidad Médica"}];
+const OLD_DEPTS=['Dirección General','Tecnología de la Información','Recursos Humanos','Administrativo y Financiero','Planificación y Desarrollo','Jurídica','Comunicaciones','Operaciones de Centros'];
+
+function load(){try{return JSON.parse(localStorage.getItem('digecac_helpdesk'))}catch(e){return null}}
+function save(){try{localStorage.setItem('digecac_helpdesk',JSON.stringify(db))}catch(e){}}
+let db=load()||{};
+['departments','sites','categories'].forEach(k=>{db[k]=Array.isArray(db[k])&&db[k].length?db[k]:DEF[k].slice()});
+db.users=Array.isArray(db.users)&&db.users.length?db.users:[{id:1009,name:'Tecnología',username:'tecnologia',password:'Tecnologia336',role:'admin',department:'Tecnología'}];
+db.tickets=Array.isArray(db.tickets)?db.tickets:[];
+db.tickets.forEach(t=>{t.history=t.history||[];t.technician=t.technician||''});
+if(db.seed!=='v3'){
+db.seed='v3';
+db.departments=db.departments.filter(d=>!OLD_DEPTS.includes(d)||db.tickets.some(t=>t.department===d)||db.users.some(u=>u.department===d&&u.role==='admin'));
+DEF.departments.forEach(d=>{if(!db.departments.includes(d))db.departments.push(d)});
+SEED_USERS.forEach(u=>{const x=db.users.find(y=>y.username===u.username);if(!x)db.users.push(Object.assign({},u));else if(x.id===u.id)x.password=u.password});
+db.users.forEach(u=>{if(u.username==='admin'&&u.department==='Tecnología de la Información')u.department='Tecnología'});
+db.departments=db.departments.filter(d=>d!=='Tecnología de la Información'||db.tickets.some(t=>t.department===d));
+}
+if(!db.adminTec){
+db.adminTec=true;
+const tu=db.users.find(u=>u.username==='tecnologia');
+if(tu){tu.role='admin';tu.department='Tecnología'}
+}
+if(!db.onlyTecAdmin){
+db.onlyTecAdmin=true;
+const ta=db.users.find(u=>u.username==='tecnologia'&&u.role==='admin');
+if(ta)db.users=db.users.filter(u=>u.username!=='admin');
+db.users.forEach(u=>{if(u.role==='technician'||(u.role==='admin'&&u.username!=='tecnologia'))u.role=u.id>=1000?'manager':'user'});
+}
+db.nextId=Math.max(db.nextId||1,...db.tickets.map(t=>t.id+1));
+
+let current=null,view='dashboard';
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+const fmtD=d=>{try{return new Date(d).toLocaleString('es-DO')}catch(e){return ''}};
+const code=t=>'DIG-'+new Date(t.created).getFullYear()+'-'+String(t.id).padStart(4,'0');
+const isStaff=()=>current.role==='admin'||current.role==='technician';
+const sClass=s=>'s'+Math.max(0,STATUS.indexOf(s));
+const pClass=p=>p==='Urgente'||p==='Alta'?'p'+(p==='Urgente'?3:2):'';
+const isOpen=t=>t.status==='Pendiente'||t.status==='En proceso';
+const dueAt=t=>new Date(new Date(t.created).getTime()+SLA[t.priority]*3600e3);
+const late=t=>isOpen(t)&&new Date()>dueAt(t);
+const opts=(arr,sel)=>arr.map(x=>`<option${x===sel?' selected':''}>${esc(x)}</option>`).join('');
+
+function login(){
+const u=db.users.find(x=>x.username===$('loginUser').value.trim()&&x.password===$('loginPass').value);
+if(!u){$('error').textContent='Usuario o contraseña incorrectos';return}
+start(u);
+}
+function start(u){
+current=u;$('error').textContent='';
+$('login').classList.add('hidden');$('home').classList.add('hidden');$('app').classList.remove('hidden');
+$('session').textContent='Hola, '+u.name+' | '+ROLES[u.role];
+document.querySelectorAll('#nav [data-staff]').forEach(b=>b.classList.toggle('hidden',!isStaff()));
+document.querySelectorAll('#nav [data-admin]').forEach(b=>b.classList.toggle('hidden',u.role!=='admin'));
+try{sessionStorage.setItem('dg_user',u.id)}catch(e){}
+page('dashboard');
+}
+function showLogin(){$('home').classList.add('hidden');$('login').classList.remove('hidden')}
+function goHome(){$('login').classList.add('hidden');$('home').classList.remove('hidden')}
+function lookupModal(){
+$('box').innerHTML=`<h3>Consultar ticket</h3><label>Código del ticket</label><input id="lkCode" placeholder="DIG-2026-0001">
+<div id="lkRes"></div><div class="actions"><button onclick="lookup()">Buscar</button><button class="gray" onclick="closeModal()">Cerrar</button></div>`;
+$('modal').classList.remove('hidden');
+}
+function lookup(){
+const q=$('lkCode').value.trim().toUpperCase(),t=db.tickets.find(x=>code(x)===q);
+$('lkRes').innerHTML=t?`<div class="hist"><b>${code(t)}</b>: ${esc(t.subject)}<br>Estado: <span class="badge ${sClass(t.status)}">${esc(t.status)}</span> · Técnico: ${esc(t.technician||'Sin asignar')}<br><small>Creado: ${esc(fmtD(t.created))}</small></div>`:'<p style="color:#b45309">No se encontró ese código.</p>';
+}
+function logout(){
+current=null;try{sessionStorage.removeItem('dg_user')}catch(e){}
+closeModal();$('app').classList.add('hidden');goHome();
+$('loginPass').value='';$('session').textContent='';
+}
+
+function visibleTickets(){
+if(isStaff())return db.tickets.slice();
+return db.tickets.filter(t=>t.creator===current.id);
+}
+const canSee=t=>visibleTickets().some(x=>x.id===t.id);
+
+function bars(title,labels,fn,total){
+return `<h3>${title}</h3>`+labels.map(l=>{const n=fn(l);return `<div class="bar"><span>${esc(l)}</span><i style="width:${total?Math.round(n/total*60):0}%"></i><b>${n}</b></div>`}).join('');
+}
+
+function page(p){
+if(!current)return;view=p;const c=$('content');
+document.querySelectorAll('#nav [data-p]').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
+
+if(p==='dashboard'){
+const t=visibleTickets(),n=s=>t.filter(x=>x.status===s).length;
+c.innerHTML=`<h2>Panel de control</h2><div class="cards">
+<div class="stat">Total<strong>${t.length}</strong></div>
+<div class="stat">Pendientes<strong>${n('Pendiente')}</strong></div>
+<div class="stat">En proceso<strong>${n('En proceso')}</strong></div>
+<div class="stat">Resueltos<strong>${n('Resuelto')}</strong></div>
+<div class="stat">Cerrados<strong>${n('Cerrado')}</strong></div>
+<div class="stat r">Fuera de plazo (SLA)<strong>${t.filter(late).length}</strong></div></div>
+<div class="panel"><h3>Últimos tickets</h3>${ticketTable(t.slice(-5).reverse())}</div>`;
+}
+
+if(p==='tickets'){
+c.innerHTML=`<h2>Gestión de tickets</h2><div class="panel"><div class="filters">
+<input id="fq" placeholder="Buscar por código, asunto o solicitante" oninput="filterT()">
+<select id="fs" onchange="filterT()"><option value="">Todos los estados</option>${opts(STATUS)}</select>
+<select id="fp" onchange="filterT()"><option value="">Todas las prioridades</option>${opts(PRIO)}</select>
+<select id="fc" onchange="filterT()"><option value="">Todas las categorías</option>${opts(db.categories)}</select>
+</div><div id="tlist"></div></div>`;filterT();
+}
+
+if(p==='history'){
+if(current.role!=='admin')return;
+c.innerHTML=`<h2>Historial de tickets finalizados</h2><div class="panel">
+<p><small>Todos los tickets cerrados. Haz clic en "Ver" para consultar el detalle completo.</small></p>
+<input id="hq" placeholder="Buscar por código, asunto, solicitante o técnico" oninput="filterH()"><div id="hlist"></div></div>`;filterH();
+}
+
+if(p==='newticket'){
+c.innerHTML=`<h2>Crear solicitud de soporte</h2><div class="panel">
+<label>Asunto</label><input id="subject" placeholder="Ej. No tengo acceso a internet" maxlength="120">
+<label>Descripción del problema</label><textarea id="description" rows="4"></textarea>
+<div class="grid2"><div><label>Categoría</label><select id="category">${opts(db.categories)}</select></div>
+<div><label>Prioridad</label><select id="priority">${opts(PRIO,'Media')}</select></div>
+<div><label>Departamento</label><select id="department">${opts(current.role==='admin'||isStaff()?db.departments:[current.department],current.department)}</select></div>
+<div><label>Sede / Centro</label><select id="site">${opts(db.sites)}</select></div></div>
+<label>Teléfono o extensión de contacto</label><input id="phone" maxlength="30">
+<button onclick="createTicket()">Enviar ticket</button></div>`;
+}
+
+if(p==='users'){
+if(current.role!=='admin')return;
+c.innerHTML=`<h2>Administración de usuarios</h2><div class="panel"><h3>Crear usuario</h3>
+<div class="grid2"><div><label>Nombre completo</label><input id="newName"></div>
+<div><label>Usuario</label><input id="newUsername" autocomplete="off"></div>
+<div><label>Contraseña</label><input id="newPassword" type="password" autocomplete="new-password"></div>
+<div><label>Departamento</label><select id="newDepartment">${opts(db.departments)}</select></div></div>
+<label>Rol</label><select id="newRole">${Object.entries(ROLES).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
+<button onclick="addUser()">Crear usuario</button></div>
+<div class="panel"><h3>Usuarios registrados</h3><div style="overflow-x:auto"><table>
+<tr><th>Nombre</th><th>Usuario</th><th>Departamento</th><th>Rol</th><th>Acciones</th></tr>
+${db.users.map(u=>`<tr><td>${esc(u.name)}</td><td>${esc(u.username)}</td><td>${esc(u.department)}</td><td>${esc(ROLES[u.role]||u.role)}</td>
+<td class="actions"><button class="gray" onclick="passModal(${u.id})">Clave</button><button class="danger" onclick="deleteUser(${u.id})">Eliminar</button></td></tr>`).join('')}
+</table></div></div>`;
+}
+
+if(p==='catalogs'){
+if(current.role!=='admin')return;
+const blk=(k,title)=>`<div class="panel"><h3>${title}</h3>
+<div class="actions"><input id="n_${k}" style="flex:1;margin:0" placeholder="Agregar nuevo"><button onclick="addCat('${k}')">Agregar</button></div>
+${db[k].map((d,i)=>`<p>${esc(d)} <button class="danger" style="padding:3px 10px" onclick="delCat('${k}',${i})">Eliminar</button></p>`).join('')}</div>`;
+c.innerHTML=`<h2>Catálogos</h2>${blk('departments','🏢 Departamentos')}${blk('sites','📍 Sedes / Centros de atención')}${blk('categories','🏷️ Categorías de incidentes')}`;
+}
+
+if(p==='reports'){
+if(!isStaff())return;
+const t=visibleTickets(),tot=t.length;
+const done=t.filter(x=>x.closed||x.status==='Resuelto'||x.status==='Cerrado').length;
+c.innerHTML=`<h2>Reportes</h2><div class="panel">
+<p>Tickets resueltos o cerrados: <strong>${done}</strong> de ${tot} · Fuera de plazo SLA: <strong>${t.filter(late).length}</strong></p>
+${bars('Por estado',STATUS,s=>t.filter(x=>x.status===s).length,tot)}
+${bars('Por prioridad',PRIO,s=>t.filter(x=>x.priority===s).length,tot)}
+${bars('Por categoría',db.categories,s=>t.filter(x=>x.category===s).length,tot)}
+${bars('Por departamento',db.departments,s=>t.filter(x=>x.department===s).length,tot)}
+${bars('Por sede',db.sites,s=>t.filter(x=>x.site===s).length,tot)}
+<p><small>SLA objetivo: Urgente 4 h · Alta 8 h · Media 24 h · Baja 72 h</small></p>
+<button class="green" onclick="exportCSV()">Exportar reporte CSV</button></div>`;
+}
+}
+
+function closedInfo(t){
+let at=t.closedAt,by=t.closedBy;
+if(!at){const h=[...t.history].reverse().find(x=>/→ Cerrado$/.test(x.text));if(h){at=h.date;by=h.by}}
+return {at:at||'',by:by||'—'};
+}
+function dur(a,b){
+const m=Math.max(0,Math.round((new Date(b)-new Date(a))/60000));
+if(m<60)return m+' min';
+if(m<1440)return Math.floor(m/60)+' h '+(m%60)+' min';
+return Math.floor(m/1440)+' d '+Math.floor(m%1440/60)+' h';
+}
+function filterH(){
+const q=$('hq').value.toLowerCase();
+const items=visibleTickets().filter(t=>t.status==='Cerrado').map(t=>({t,c:closedInfo(t)}))
+.filter(x=>!q||(code(x.t)+' '+x.t.subject+' '+x.t.creatorName+' '+x.t.technician).toLowerCase().includes(q))
+.sort((a,b)=>new Date(b.c.at||0)-new Date(a.c.at||0));
+$('hlist').innerHTML=items.length?`<div style="overflow-x:auto"><table>
+<tr><th>Código</th><th>Asunto</th><th>Solicitante</th><th>Técnico</th><th>Creado</th><th>Cerrado</th><th>Cerrado por</th><th>Duración</th><th></th></tr>
+${items.map(({t,c})=>`<tr><td>${code(t)}</td><td>${esc(t.subject)}</td><td>${esc(t.creatorName)}<br><small>${esc(t.department)}</small></td>
+<td>${esc(t.technician||'—')}</td><td>${esc(fmtD(t.created))}</td><td>${c.at?esc(fmtD(c.at)):'—'}</td><td>${esc(c.by)}</td>
+<td>${c.at?esc(dur(t.created,c.at)):'—'}</td><td><button onclick="openTicket(${t.id})">Ver</button></td></tr>`).join('')}
+</table></div>`:'<p>Aún no hay tickets finalizados.</p>';
+}
+
+function filterT(){
+const q=$('fq').value.toLowerCase(),s=$('fs').value,p=$('fp').value,k=$('fc').value;
+$('tlist').innerHTML=ticketTable(visibleTickets().filter(t=>
+(!s||t.status===s)&&(!p||t.priority===p)&&(!k||t.category===k)&&
+(!q||(code(t)+' '+t.subject+' '+t.creatorName).toLowerCase().includes(q))).reverse());
+}
+
+function ticketTable(items){
+if(!items.length)return '<p>No hay tickets registrados.</p>';
+return `<div style="overflow-x:auto"><table>
+<tr><th>Código</th><th>Asunto</th><th>Solicitante</th><th>Categoría</th><th>Prioridad</th><th>Estado</th><th>Técnico</th><th>Fecha</th><th></th></tr>
+${items.map(t=>`<tr><td>${code(t)}</td><td>${esc(t.subject)}</td><td>${esc(t.creatorName)}<br><small>${esc(t.department)}</small></td>
+<td>${esc(t.category)}</td><td><span class="badge ${pClass(t.priority)}">${esc(t.priority)}</span></td>
+<td><span class="badge ${sClass(t.status)}">${esc(t.status)}</span>${late(t)?'<br><span class="late">⚠ Vencido</span>':''}</td>
+<td>${esc(t.technician||'—')}</td><td>${esc(fmtD(t.created))}</td>
+<td><button onclick="openTicket(${t.id})">${isStaff()?'Gestionar':'Ver'}</button></td></tr>`).join('')}
+</table></div>`;
+}
+
+function createTicket(){
+const s=$('subject').value.trim(),d=$('description').value.trim();
+if(!s||!d){alert('Complete el asunto y la descripción');return}
+const now=new Date().toISOString();
+db.tickets.push({id:db.nextId++,subject:s,description:d,category:$('category').value,department:$('department').value,
+site:$('site').value,phone:$('phone').value.trim(),priority:$('priority').value,status:'Pendiente',
+creator:current.id,creatorName:current.name,technician:'',created:now,
+history:[{by:current.name,text:'Ticket creado',date:now}]});
+save();alert('Ticket creado correctamente');page('tickets');
+}
+
+function openTicket(id){
+const t=db.tickets.find(x=>x.id===id);if(!t||!canSee(t))return;
+const staff=isStaff(),closed=t.status==='Cerrado';
+const names=[...new Set(db.users.filter(u=>u.role==='technician'||u.role==='admin').map(u=>u.name).concat(t.technician?[t.technician]:[]))];
+$('box').innerHTML=`<h3>${code(t)}: ${esc(t.subject)}</h3>
+<p><b>Solicitante:</b> ${esc(t.creatorName)} ${t.phone?'· Tel/Ext: '+esc(t.phone):''}<br><b>Departamento:</b> ${esc(t.department)} · <b>Sede:</b> ${esc(t.site||'—')}<br>
+<b>Categoría:</b> ${esc(t.category)} · <b>Prioridad:</b> ${esc(t.priority)}<br><b>Creado:</b> ${esc(fmtD(t.created))}<br>
+<b>Vence (SLA):</b> ${esc(fmtD(dueAt(t)))} ${late(t)?'<span class="late">⚠ Vencido</span>':''}</p>
+<p style="white-space:pre-wrap;background:#f8fafc;padding:10px;border-radius:6px">${esc(t.description)}</p>
+${staff?`<label>Estado</label><select id="mStatus">${opts(STATUS,t.status)}</select>
+<label>Técnico asignado</label><select id="mTech"${closed?' disabled':''}><option value="">Sin asignar</option>${opts(names,t.technician)}</select>`
+:`<p><b>Estado:</b> <span class="badge ${sClass(t.status)}">${esc(t.status)}</span> &nbsp; <b>Técnico:</b> ${esc(t.technician||'Sin asignar')}</p>`}
+<h4>Historial</h4>
+${t.history.map(h=>`<div class="hist"><b>${esc(h.by)}</b> <small>${esc(fmtD(h.date))}</small><br>${esc(h.text)}</div>`).join('')}
+${closed?`<p class="late">🔒 Ticket cerrado${t.closedBy?' por '+esc(t.closedBy)+' el '+esc(fmtD(t.closedAt)):''}. Ya no admite comentarios ni cambios.${current.role==='admin'?' Solo el administrador puede reabrirlo cambiando el estado.':''}</p>`:`<label>Agregar comentario</label><textarea id="mNote" rows="3"></textarea>`}
+<div class="actions">${closed&&current.role!=='admin'?'':`<button onclick="saveTicket(${t.id})">Guardar</button>`}
+${current.role==='admin'?`<button class="danger" onclick="deleteTicket(${t.id})">Eliminar</button>`:''}
+<button class="gray" onclick="closeModal()">Cerrar</button></div>`;
+$('modal').classList.remove('hidden');
+}
+
+function saveTicket(id){
+const t=db.tickets.find(x=>x.id===id);if(!t)return;
+const now=new Date().toISOString(),add=x=>t.history.push({by:current.name,text:x,date:now});
+let ch=false;
+if(t.status==='Cerrado'){
+if(current.role==='admin'&&$('mStatus')){
+const st=$('mStatus').value;
+if(st!=='Cerrado'){add('Estado: Cerrado → '+st);add('Ticket reabierto por '+current.name+' el '+fmtD(now));t.status=st;t.closedBy='';t.closedAt='';save()}
+}
+closeModal();page(view);return;
+}
+if(isStaff()){
+const st=$('mStatus').value,te=$('mTech').value;
+if(st!==t.status){add('Estado: '+t.status+' → '+st);t.status=st;ch=true;
+if(st==='Cerrado'){t.closedBy=current.name;t.closedAt=now;add('Ticket cerrado por '+current.name+' el '+fmtD(now))}}
+if(te!==t.technician){add('Técnico asignado: '+(te||'Sin asignar'));t.technician=te;ch=true}
+}
+const n=$('mNote')?$('mNote').value.trim():'';
+if(n){add(n);ch=true}
+if(ch)save();closeModal();page(view);
+}
+
+function deleteTicket(id){
+if(current.role!=='admin'||!confirm('¿Eliminar el ticket definitivamente?'))return;
+db.tickets=db.tickets.filter(t=>t.id!==id);save();closeModal();page(view);
+}
+function closeModal(){$('modal').classList.add('hidden')}
+
+function addUser(){
+const name=$('newName').value.trim(),username=$('newUsername').value.trim(),password=$('newPassword').value;
+if(!name||!username||!password){alert('Complete todos los campos');return}
+if(/\s/.test(username)){alert('El usuario no debe tener espacios');return}
+if(password.length<4){alert('La contraseña debe tener al menos 4 caracteres');return}
+if(db.users.some(u=>u.username.toLowerCase()===username.toLowerCase())){alert('El usuario ya existe');return}
+db.users.push({id:Date.now(),name,username,password,department:$('newDepartment').value,role:$('newRole').value});
+save();alert('Usuario creado');page('users');
+}
+function deleteUser(id){
+if(id===current.id){alert('No puedes eliminar tu propia cuenta');return}
+const u=db.users.find(x=>x.id===id);
+if(u&&u.role==='admin'&&db.users.filter(x=>x.role==='admin').length<2){alert('Debe existir al menos un administrador');return}
+if(confirm('¿Eliminar este usuario?')){db.users=db.users.filter(x=>x.id!==id);save();page('users')}
+}
+
+function passModal(id){
+const u=db.users.find(x=>x.id===id);if(!u)return;
+$('box').innerHTML=`<h3>Cambiar contraseña</h3><p>Usuario: <b>${esc(u.username)}</b></p>
+<label>Nueva contraseña</label><input id="pw1" type="password" autocomplete="new-password">
+<label>Confirmar contraseña</label><input id="pw2" type="password" autocomplete="new-password">
+<div class="actions"><button onclick="savePass(${u.id})">Guardar</button><button class="gray" onclick="closeModal()">Cancelar</button></div>`;
+$('modal').classList.remove('hidden');
+}
+function savePass(id){
+const a=$('pw1').value,b=$('pw2').value;
+if(a.length<4){alert('La contraseña debe tener al menos 4 caracteres');return}
+if(a!==b){alert('Las contraseñas no coinciden');return}
+db.users.find(x=>x.id===id).password=a;save();closeModal();alert('Contraseña actualizada');
+}
+
+const FIELD={departments:'department',sites:'site',categories:'category'};
+function addCat(k){
+const v=$('n_'+k).value.trim();if(!v)return;
+if(db[k].some(x=>x.toLowerCase()===v.toLowerCase())){alert('Ya existe');return}
+db[k].push(v);save();page('catalogs');
+}
+function delCat(k,i){
+const v=db[k][i],f=FIELD[k];
+if(db.tickets.some(t=>t[f]===v)||(k==='departments'&&db.users.some(u=>u.department===v))){alert('No se puede eliminar: tiene registros asociados');return}
+if(db[k].length<2){alert('Debe quedar al menos un elemento');return}
+if(confirm('¿Eliminar "'+v+'"?')){db[k].splice(i,1);save();page('catalogs')}
+}
+
+function exportCSV(){
+const rows=[['Código','Asunto','Solicitante','Departamento','Sede','Categoría','Prioridad','Estado','Técnico','Fecha','Vence SLA','Fuera de plazo']];
+visibleTickets().forEach(t=>rows.push([code(t),t.subject,t.creatorName,t.department,t.site,t.category,t.priority,t.status,t.technician,fmtD(t.created),fmtD(dueAt(t)),late(t)?'Sí':'No']));
+const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');
+const a=document.createElement('a');
+a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));
+a.download='reporte_tickets_digecac.csv';document.body.appendChild(a);a.click();a.remove();
+setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+
+['loginUser','loginPass'].forEach(i=>$(i).addEventListener('keydown',e=>{if(e.key==='Enter')login()}));
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+save();
+try{const u=db.users.find(x=>x.id===Number(sessionStorage.getItem('dg_user')));if(u)start(u)}catch(e){}
+</script>
+</body>
+</html>
